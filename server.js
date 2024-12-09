@@ -80,6 +80,33 @@ app.post('/api/messages', async (req, res) => {
   }
 });
 
+app.put('/api/messages/:id', async (req, res) => {
+    try {
+      const { id } = req.params; // Get the message ID from the URL parameters
+      const { isOpen } = req.body; // Get the `isOpen` value from the request body
+  
+      if (typeof isOpen !== 'boolean') {
+        return res.status(400).json({ error: 'Invalid value for isOpen. It must be a boolean.' });
+      }
+  
+      // Find the message by ID and update the `isOpen` field
+      const updatedMessage = await Message.findByIdAndUpdate(
+        id,
+        { isOpen },
+        { new: true } // Return the updated document
+      );
+  
+      if (!updatedMessage) {
+        return res.status(404).json({ error: 'Message not found.' });
+      }
+  
+      res.status(200).json({ message: 'Message updated successfully.', data: updatedMessage });
+    } catch (err) {
+      console.error('Error updating message:', err);
+      res.status(500).json({ error: 'Failed to update message.' });
+    }
+  });
+
 // Start the server
 const PORT = 3001;
 app.listen(PORT, () => {
