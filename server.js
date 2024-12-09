@@ -9,7 +9,7 @@ app.use(express.json());
 
 // MongoDB connection
 const mongoURI = 'mongodb+srv://feels:TnvDHNKQASQ5yJ6I@cluster0.nzw0a.mongodb.net/messagesApp?retryWrites=true&w=majority';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI, {  useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => {
     console.error('MongoDB connection error:', err);
