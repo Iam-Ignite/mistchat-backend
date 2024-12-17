@@ -13,7 +13,10 @@ export const GET = async (req, { params }) => {
       return new Response(JSON.stringify({ message: "No questions found for this username." }), { status: 404 });
     }
 
-    const userQuestions = questions.map(({ _id, question }) => ({ id: _id, question }));
+    const userQuestions = questions.map((message) => ({
+      id: message._id,
+      question: message,  // Only include the question field
+    }));
 
     return new Response(JSON.stringify(userQuestions), { headers: { "Content-Type": "application/json" } });
   } catch (err) {
