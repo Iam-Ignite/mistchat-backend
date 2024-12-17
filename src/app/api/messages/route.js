@@ -1,6 +1,6 @@
 import { connectDB } from "../../lib/mongodb";
 import Message from "../../models/Message";
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // CORS configuration
 const CORS_HEADERS = {
