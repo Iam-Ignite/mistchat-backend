@@ -1,36 +1,23 @@
 import { connectDB } from "../../lib/mongodb";
 import Message from "../../models/Message";
-import Cors from "cors";
-
-// Initialize the CORS middleware
-const cors = Cors({
-  origin: "https://mistchat.netlify.app", // Your frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE"],
-});
-
-// Helper function to run middleware in Next.js
-function runMiddleware(req, res, fn) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
-}
 
 export const POST = async (req) => {
   try {
-    // Initialize a mock `res` object for CORS middleware
-    const res = {
-      status: () => res,
-      json: () => res,
-      setHeader: () => res,
+    // Set CORS headers directly
+    const headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "https://mistchat.netlify.app", // Replace with your frontend's URL
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Content-Type",
     };
 
-    // Run the CORS middleware
-    await runMiddleware(req, res, cors);
+    // Handle preflight requests (CORS pre-check)
+    if (req.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204, // No content
+        headers,
+      });
+    }
 
     // Connect to the database
     await connectDB();
@@ -40,7 +27,10 @@ export const POST = async (req) => {
 
     // Validate required fields
     if (!sender || !username || !messageText || !question) {
-      return new Response(JSON.stringify({ error: "All fields are required." }), { status: 400 });
+      return new Response(JSON.stringify({ error: "All fields are required." }), {
+        status: 400,
+        headers,
+      });
     }
 
     // Save the new message to the database
@@ -48,12 +38,17 @@ export const POST = async (req) => {
     await newMessage.save();
 
     // Return success response
-    return new Response(JSON.stringify(newMessage), { 
-      status: 201, 
-      headers: { "Content-Type": "application/json" } 
+    return new Response(JSON.stringify(newMessage), {
+      status: 201,
+      headers,
     });
   } catch (err) {
     console.error("Error saving message:", err);
-    return new Response(JSON.stringify({ error: "Failed to save message." }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Failed to save message." }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 };
