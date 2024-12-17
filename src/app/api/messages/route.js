@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 // CORS configuration
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://mistchat.netlify.app/', // Specify the exact origin
+  'Access-Control-Allow-Origin': 'https://mistchat.netlify.app', // Specify the exact origin
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
