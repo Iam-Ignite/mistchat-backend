@@ -1,5 +1,7 @@
 import { connectDB } from "../../../lib/mongodb";
 import Message from "../../../models/Message";
+import Cors from "cors";
+
 
 export const GET = async (req, { params }) => {
   try {
